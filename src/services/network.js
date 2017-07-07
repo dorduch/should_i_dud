@@ -4,7 +4,8 @@ import template from 'url-template';
 
 // const apiUrl = 'http://api.apixu.com/v1/history.json';//apixu
 // const apiKey = '6dac7dbd524a42a398573337170707'; //apixu
-const apiUrl =  'https://should-i-dud-server.herokuapp.com/cloudcoverage'; //darksky
+const apiUrl =  'http://localhost:8080/cloudcoverage'; //darksky
+// const apiUrl =  'https://should-i-dud-server.herokuapp.com/cloudcoverage'; //darksky
 const apiKey = '1b40a3428e9099642baa36e54ff0b413'; //darksky
 
 export function getHistoryWeatherOld (query: string, time: string): Object {
@@ -16,12 +17,13 @@ export function getHistoryWeatherOld (query: string, time: string): Object {
   return axios.get (apiUrl, {params: reqParams});
 }
 
-export function getHistoryWeather({lat, lon, time}): Promise<any> {
+export function getHistoryWeather({lat, lon, time, hours}): Promise<any> {
   const url = apiUrl;
   const reqParams = {
     lat,
     lon,
-    time
+    time,
+    hours
   };
   return axios.get(url, {params: reqParams});
   // return new Promise ((resolve, reject) =>

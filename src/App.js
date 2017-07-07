@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import moment from 'moment';
-import {getCloudCoverage, getCoverageLevel, levels} from './services/weather';
+import {getUvIndex, getUvIndexLevel, levels, getUvIndexLabel} from './services/weather';
 import CircularProgress from 'material-ui/CircularProgress';
 
 
@@ -13,9 +13,10 @@ const styles = {
     padding: '25px',
     boxSizing: 'border-box'
   },
-  cloudCoverageLabel: {
+  label: {
     fontSize: '20px',
     flexGrow: '1',
+    textAlign: 'center',
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -31,6 +32,7 @@ const styles = {
   },
   title: {
     fontSize: '30px',
+    textAlign: 'center',
     position: 'absolute',
     top: '25px'
   },
@@ -44,26 +46,27 @@ const styles = {
 
 class App extends Component {
   state = {
-    cloudCoverage: 0,
+    uvIndex: 0,
     loading: true,
     level: levels.default,
   };
   componentDidMount () {
-    this.getCloudCoverage ();
+    this.getUvIndex ();
   }
 
-  getCloudCoverage = () => {
+  getUvIndex = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition (position => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
-        getCloudCoverage (
+        getUvIndex (
           lat,
           lon,
-          moment ().subtract (1, 'days').unix ()
-        ).then (coverage =>
+          moment ().unix (),
+          moment().hours()
+        ).then (uvIndex =>
           this.setState (
-            {cloudCoverage: coverage, loading: false, level: getCoverageLevel(coverage)}
+            {uvIndex: uvIndex, loading: false, level: getUvIndexLevel(uvIndex)}
           )
         );
       });
@@ -77,11 +80,11 @@ class App extends Component {
           <div style={styles.title}>Should i Dud?</div>
           {this.state.loading
             ? <CircularProgress color='white' />
-            : <div style={styles.cloudCoverageLabel}>
+            : <div style={styles.label}>
                 <div style={{display: 'flex', flexDirection: 'column', alignContent: 'center', justifyContent: 'center'}}>
                   <div style={styles.subtitle}>{this.state.level.label}</div>
                   <div style={{textAlign: 'center'}}
-                  >{`Cloud Coverage: ${Math.round (this.state.cloudCoverage * 100)}%`}</div>
+                  >{getUvIndexLabel(this.state.uvIndex)}</div>
                 </div>
                 <a
                   href="https://darksky.net/poweredby/"
