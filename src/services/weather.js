@@ -28,7 +28,7 @@ export function getCoverageLevel (cloudCoverage) {
 
 export function getCloudCoverage (lat, lon, time) {
   return getHistoryWeather ({lat, lon, time}).then (res => {
-    const cloudCoverage = res.data.daily.data[0].cloudCover;
+    const cloudCoverage = res.data;
     return cloudCoverage;
   });
 }
