@@ -44,8 +44,8 @@ const styles = {
   address: {
     textAlign: 'center',
     fontSize: '12px',
-    marginTop: '15px'
-  }
+    marginTop: '15px',
+  },
 };
 
 class App extends Component {
@@ -64,19 +64,17 @@ class App extends Component {
       navigator.geolocation.getCurrentPosition (position => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
-        Promise.all([getAddress(lat, lon), getUvIndex (
-          lat,
-          lon,
-          moment ().unix (),
-          moment ().hours ()
-        )]).then (res =>
+        Promise.all ([
+          getAddress (lat, lon),
+          getUvIndex (lat, lon, moment ().unix (), moment ().hours ()),
+        ]).then (res => {
           this.setState ({
             uvIndex: res[1],
             loading: false,
             address: res[0],
             level: getUvIndexLevel (res[1]),
-          })
-        );
+          });
+        });
       });
     }
   };
@@ -101,7 +99,7 @@ class App extends Component {
                   <div style={{textAlign: 'center'}}>
                     {this.state.level.subtitle}
                   </div>
-                    <div style={styles.address}>
+                  <div style={styles.address}>
                     {this.state.address}
                   </div>
                 </div>
