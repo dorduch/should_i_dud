@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import moment from 'moment';
-import {getUvIndex, getUvIndexLevel, levels, getUvIndexLabel} from './services/weather';
+import {getUvIndex, getUvIndexLevel, levels} from './services/weather';
 import CircularProgress from 'material-ui/CircularProgress';
-
-
 
 const styles = {
   container: {
@@ -11,7 +9,7 @@ const styles = {
     position: 'relative',
     width: '100vw',
     padding: '25px',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
   },
   label: {
     fontSize: '20px',
@@ -34,7 +32,7 @@ const styles = {
     fontSize: '30px',
     textAlign: 'center',
     position: 'absolute',
-    top: '25px'
+    top: '25px',
   },
   subtitle: {
     fontSize: '100px',
@@ -63,11 +61,13 @@ class App extends Component {
           lat,
           lon,
           moment ().unix (),
-          moment().hours()
+          moment ().hours ()
         ).then (uvIndex =>
-          this.setState (
-            {uvIndex: uvIndex, loading: false, level: getUvIndexLevel(uvIndex)}
-          )
+          this.setState ({
+            uvIndex: uvIndex,
+            loading: false,
+            level: getUvIndexLevel (uvIndex),
+          })
         );
       });
     }
@@ -79,12 +79,20 @@ class App extends Component {
         <div style={styles.content}>
           <div style={styles.title}>Should i Dud?</div>
           {this.state.loading
-            ? <CircularProgress color='white' />
+            ? <CircularProgress color="white" />
             : <div style={styles.label}>
-                <div style={{display: 'flex', flexDirection: 'column', alignContent: 'center', justifyContent: 'center'}}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <div style={styles.subtitle}>{this.state.level.label}</div>
-                  <div style={{textAlign: 'center'}}
-                  >{getUvIndexLabel(this.state.uvIndex)}</div>
+                  <div style={{textAlign: 'center'}}>
+                    {this.state.level.subtitle}
+                  </div>
                 </div>
                 <a
                   href="https://darksky.net/poweredby/"
