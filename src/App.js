@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import moment from 'moment';
 import {getUvIndex, getUvIndexLevel, levels} from './services/weather';
+import {getAddress} from './services/location';
 import CircularProgress from 'material-ui/CircularProgress';
 
 const styles = {
@@ -40,12 +41,18 @@ const styles = {
     margin: '20px',
     letterSpacing: '2px',
   },
+  address: {
+    textAlign: 'center',
+    fontSize: '12px',
+    marginTop: '15px'
+  }
 };
 
 class App extends Component {
   state = {
     uvIndex: 0,
     loading: true,
+    address: '',
     level: levels.default,
   };
   componentDidMount () {
@@ -57,16 +64,17 @@ class App extends Component {
       navigator.geolocation.getCurrentPosition (position => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
-        getUvIndex (
+        Promise.all([getAddress(lat, lon), getUvIndex (
           lat,
           lon,
           moment ().unix (),
           moment ().hours ()
-        ).then (uvIndex =>
+        )]).then (res =>
           this.setState ({
-            uvIndex: uvIndex,
+            uvIndex: res[1],
             loading: false,
-            level: getUvIndexLevel (uvIndex),
+            address: res[0],
+            level: getUvIndexLevel (res[1]),
           })
         );
       });
@@ -92,6 +100,9 @@ class App extends Component {
                   <div style={styles.subtitle}>{this.state.level.label}</div>
                   <div style={{textAlign: 'center'}}>
                     {this.state.level.subtitle}
+                  </div>
+                    <div style={styles.address}>
+                    {this.state.address}
                   </div>
                 </div>
                 <a
