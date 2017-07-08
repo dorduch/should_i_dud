@@ -5,7 +5,7 @@ import axios from 'axios';
 // const apiKey = '6dac7dbd524a42a398573337170707'; //apixu
 // const apiUrl =  'http://localhost:8080/cloudcoverage'; //darksky
 const apiUrl =  'https://should-i-dud-server.herokuapp.com/cloudcoverage'; //darksky
-const googleLocationUrl = 'http://maps.googleapis.com/maps/api/geocode/json'
+const apiUrlLocation =  'https://should-i-dud-server.herokuapp.com/getaddress'; //darksky
 const apiKey = '1b40a3428e9099642baa36e54ff0b413'; //darksky
 
 export function getHistoryWeatherOld (query: string, time: string): Object {
@@ -19,10 +19,10 @@ export function getHistoryWeatherOld (query: string, time: string): Object {
 
 export function getAddressByLocation(lat, lon) {
   const reqParams = {
-    sensor: true,
-    latlng: `${lat},${lon}`
+    lat,
+    lon,
   }
-   return axios.get(googleLocationUrl, {params: reqParams})
+   return axios.get(apiUrlLocation, {params: reqParams})
 }
 export function getHistoryWeather({lat, lon, time, hours}): Promise<any> {
   const url = apiUrl;
